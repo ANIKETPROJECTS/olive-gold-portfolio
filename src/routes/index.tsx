@@ -175,26 +175,33 @@ function ProductCard({
   description,
   tags,
   images,
+  to,
 }: {
   title: string;
   description: string;
   tags: string[];
   images: string[];
+  to: "/products/tshirts" | "/products/wallets";
 }) {
   const [active, setActive] = useState(0);
   useEffect(() => {
-    if (images.length < 2) return;
+    if (!images || images.length < 2) return;
     const id = setInterval(() => setActive((a) => (a + 1) % images.length), 3500);
     return () => clearInterval(id);
-  }, [images.length]);
+  }, [images]);
+
+  const safeImages = images ?? [];
 
   return (
-    <article className="product-card reveal bg-card border border-gold/60 rounded-sm overflow-hidden flex flex-col">
+    <Link
+      to={to}
+      className="product-card reveal bg-card border border-gold/60 rounded-sm overflow-hidden flex flex-col group"
+    >
       <div
         className="relative h-[340px] md:h-[400px] m-3 overflow-hidden"
         style={{ background: "#2A3320", border: "1px solid rgba(212,175,55,0.45)" }}
       >
-        {images.map((src, i) => (
+        {safeImages.map((src, i) => (
           <img
             key={src}
             src={src}
@@ -205,15 +212,18 @@ function ProductCard({
             }`}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute top-4 right-4 text-[10px] tracking-[0.3em] font-display text-gold bg-black/60 backdrop-blur-sm border border-gold/40 px-3 py-1.5 rounded-full">
+          View Collection →
+        </div>
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-          {images.map((_, i) => (
-            <button
+          {safeImages.slice(0, 8).map((_, i) => (
+            <span
               key={i}
-              aria-label={`View image ${i + 1}`}
-              onClick={() => setActive(i)}
               className={`h-[3px] transition-all rounded-full ${
-                i === active ? "w-6 bg-gold" : "w-2 bg-gold/40 hover:bg-gold/70"
+                i === active % Math.min(safeImages.length, 8)
+                  ? "w-6 bg-gold"
+                  : "w-2 bg-gold/40"
               }`}
             />
           ))}
@@ -236,11 +246,9 @@ function ProductCard({
             </span>
           ))}
         </div>
-        <a href="#contact" className="gold-link mt-auto self-start">
-          Enquire Now →
-        </a>
+        <span className="gold-link mt-auto self-start">Explore Collection →</span>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -257,12 +265,14 @@ function Products() {
           description="Bulk custom-printed tees for offices, events, brands & more. Premium fabrics, precise prints, any quantity."
           tags={["Bulk Orders", "Office Wear", "Custom Print"]}
           images={tshirtImages}
+          to="/products/tshirts"
         />
         <ProductCard
           title="Custom Oliive Line Wallets"
           description="Handcrafted wallets with custom branding. Perfect for corporate gifts, retail, or personal collections."
           tags={["Corporate Gifting", "Custom Branding", "Premium Leather"]}
           images={walletImages}
+          to="/products/wallets"
         />
       </div>
     </section>
