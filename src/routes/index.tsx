@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "@/assets/logo.png"; /* Replace logo.png with actual logo file */
+
+const tshirtImages = Object.values(
+  import.meta.glob("@/assets/products/tshirts/*.jpeg", { eager: true, import: "default" })
+) as string[];
+const walletImages = Object.values(
+  import.meta.glob("@/assets/products/wallets/*.jpeg", { eager: true, import: "default" })
+) as string[];
 
 export const Route = createFileRoute("/")({
   component: Index,
