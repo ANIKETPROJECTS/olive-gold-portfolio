@@ -281,12 +281,9 @@ function Products() {
 
 function Footer() {
   const items = [
-    /* Replace with real email */
-    { icon: "✉", label: "Email", value: "hello@oliiveline.com" },
-    /* Replace with real phone */
-    { icon: "✆", label: "Phone", value: "+91 00000 00000" },
-    /* Replace with real location */
-    { icon: "✦", label: "Location", value: "Mumbai, India" },
+    { icon: "✦", label: "Contact", value: "Mahendra Kolge" },
+    { icon: "✆", label: "Phone", value: "+91 98922 92007" },
+    { icon: "✉", label: "Email", value: "mahendrakolge007@gmail.com" },
   ];
   return (
     <footer id="contact" className="px-6 py-20 bg-background">
