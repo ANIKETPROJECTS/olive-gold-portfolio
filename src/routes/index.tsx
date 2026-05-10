@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "@/assets/logo.png"; /* Replace logo.png with actual logo file */
+
+const tshirtImages = Object.values(
+  import.meta.glob("@/assets/products/tshirts/*.jpeg", { eager: true, import: "default" })
+) as string[];
+const walletImages = Object.values(
+  import.meta.glob("@/assets/products/wallets/*.jpeg", { eager: true, import: "default" })
+) as string[];
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -168,27 +175,50 @@ function ProductCard({
   title,
   description,
   tags,
+  images,
 }: {
   title: string;
   description: string;
   tags: string[];
+  images: string[];
 }) {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    if (images.length < 2) return;
+    const id = setInterval(() => setActive((a) => (a + 1) % images.length), 3500);
+    return () => clearInterval(id);
+  }, [images.length]);
+
   return (
     <article className="product-card reveal bg-card border border-gold/60 rounded-sm overflow-hidden flex flex-col">
       <div
-        className="h-[300px] m-3 flex flex-col items-center justify-center text-center gap-3"
-        style={{
-          background: "#2A3320",
-          border: "1px dashed rgba(212,175,55,0.55)",
-        }}
+        className="relative h-[340px] md:h-[400px] m-3 overflow-hidden"
+        style={{ background: "#2A3320", border: "1px solid rgba(212,175,55,0.45)" }}
       >
-        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" className="text-cream/70">
-          <path d="M3 7h3l2-3h8l2 3h3v13H3z" stroke="currentColor" strokeWidth="1.2" />
-          <circle cx="12" cy="13" r="4" stroke="currentColor" strokeWidth="1.2" />
-        </svg>
-        <span className="text-cream/60 text-sm tracking-[0.2em] uppercase font-display">
-          Product Images Coming Soon
-        </span>
+        {images.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt={`${title} ${i + 1}`}
+            loading="lazy"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              i === active ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              aria-label={`View image ${i + 1}`}
+              onClick={() => setActive(i)}
+              className={`h-[3px] transition-all rounded-full ${
+                i === active ? "w-6 bg-gold" : "w-2 bg-gold/40 hover:bg-gold/70"
+              }`}
+            />
+          ))}
+        </div>
       </div>
       <div className="p-8 md:p-10 flex flex-col flex-1">
         <h3 className="font-display text-gold text-2xl md:text-3xl mb-4 tracking-wider">
@@ -227,11 +257,13 @@ function Products() {
           title="Custom Oliive Line T-Shirts"
           description="Bulk custom-printed tees for offices, events, brands & more. Premium fabrics, precise prints, any quantity."
           tags={["Bulk Orders", "Office Wear", "Custom Print"]}
+          images={tshirtImages}
         />
         <ProductCard
           title="Custom Oliive Line Wallets"
           description="Handcrafted wallets with custom branding. Perfect for corporate gifts, retail, or personal collections."
           tags={["Corporate Gifting", "Custom Branding", "Premium Leather"]}
+          images={walletImages}
         />
       </div>
     </section>
