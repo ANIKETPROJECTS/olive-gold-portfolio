@@ -137,12 +137,7 @@ function Hero() {
       style={{ background: "var(--gradient-hero)" }}
     >
       <div className="text-center max-w-3xl">
-        <img
-          src={logo}
-          alt="OLIIVELINE Logo"
-          /* Replace logo.png with actual logo file */
-          className="w-44 md:w-56 mx-auto mb-8 drop-shadow-[0_0_40px_rgba(212,175,55,0.25)]"
-        />
+        <div className="section-label mb-8">Premium Custom Manufacturing</div>
         <h1 className="shimmer-text font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-[0.3em] mb-6">
           OLIIVELINE
         </h1>
