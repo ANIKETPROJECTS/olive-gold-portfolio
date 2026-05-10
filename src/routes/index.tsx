@@ -44,9 +44,16 @@ function Navbar({ onOpen }: { onOpen: () => void }) {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
-        <a href="#top" className="font-display text-gold text-xl md:text-2xl tracking-[0.3em]">
-          OLIIVELINE
-        </a>
+        <Link to="/" className="flex items-center gap-3 group">
+          <img
+            src={logo}
+            alt="OLIIVELINE Logo"
+            className="h-10 md:h-12 w-auto drop-shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-transform group-hover:scale-105"
+          />
+          <span className="font-display text-gold text-lg md:text-xl tracking-[0.3em] hidden sm:inline">
+            OLIIVELINE
+          </span>
+        </Link>
         <button
           aria-label="Open menu"
           onClick={onOpen}
