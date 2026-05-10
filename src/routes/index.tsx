@@ -1,13 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import logo from "@/assets/logo.png"; /* Replace logo.png with actual logo file */
+import { categories } from "@/lib/products";
 
-const tshirtImages = Object.values(
-  import.meta.glob("@/assets/products/tshirts/*.jpeg", { eager: true, import: "default" })
-) as string[];
-const walletImages = Object.values(
-  import.meta.glob("@/assets/products/wallets/*.jpeg", { eager: true, import: "default" })
-) as string[];
+const tshirtImages = categories.tshirts.images;
+const walletImages = categories.wallets.images;
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -47,9 +44,16 @@ function Navbar({ onOpen }: { onOpen: () => void }) {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
-        <a href="#top" className="font-display text-gold text-xl md:text-2xl tracking-[0.3em]">
-          OLIIVELINE
-        </a>
+        <Link to="/" className="flex items-center gap-3 group">
+          <img
+            src={logo}
+            alt="OLIIVELINE Logo"
+            className="h-10 md:h-12 w-auto drop-shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-transform group-hover:scale-105"
+          />
+          <span className="font-display text-gold text-lg md:text-xl tracking-[0.3em] hidden sm:inline">
+            OLIIVELINE
+          </span>
+        </Link>
         <button
           aria-label="Open menu"
           onClick={onOpen}
@@ -133,12 +137,7 @@ function Hero() {
       style={{ background: "var(--gradient-hero)" }}
     >
       <div className="text-center max-w-3xl">
-        <img
-          src={logo}
-          alt="OLIIVELINE Logo"
-          /* Replace logo.png with actual logo file */
-          className="w-44 md:w-56 mx-auto mb-8 drop-shadow-[0_0_40px_rgba(212,175,55,0.25)]"
-        />
+        <div className="section-label mb-8">Premium Custom Manufacturing</div>
         <h1 className="shimmer-text font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-[0.3em] mb-6">
           OLIIVELINE
         </h1>
@@ -176,26 +175,33 @@ function ProductCard({
   description,
   tags,
   images,
+  to,
 }: {
   title: string;
   description: string;
   tags: string[];
   images: string[];
+  to: "/products/tshirts" | "/products/wallets";
 }) {
   const [active, setActive] = useState(0);
   useEffect(() => {
-    if (images.length < 2) return;
+    if (!images || images.length < 2) return;
     const id = setInterval(() => setActive((a) => (a + 1) % images.length), 3500);
     return () => clearInterval(id);
-  }, [images.length]);
+  }, [images]);
+
+  const safeImages = images ?? [];
 
   return (
-    <article className="product-card reveal bg-card border border-gold/60 rounded-sm overflow-hidden flex flex-col">
+    <Link
+      to={to}
+      className="product-card reveal bg-card border border-gold/60 rounded-sm overflow-hidden flex flex-col group"
+    >
       <div
         className="relative h-[340px] md:h-[400px] m-3 overflow-hidden"
         style={{ background: "#2A3320", border: "1px solid rgba(212,175,55,0.45)" }}
       >
-        {images.map((src, i) => (
+        {safeImages.map((src, i) => (
           <img
             key={src}
             src={src}
@@ -206,15 +212,18 @@ function ProductCard({
             }`}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute top-4 right-4 text-[10px] tracking-[0.3em] font-display text-gold bg-black/60 backdrop-blur-sm border border-gold/40 px-3 py-1.5 rounded-full">
+          View Collection →
+        </div>
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-          {images.map((_, i) => (
-            <button
+          {safeImages.slice(0, 8).map((_, i) => (
+            <span
               key={i}
-              aria-label={`View image ${i + 1}`}
-              onClick={() => setActive(i)}
               className={`h-[3px] transition-all rounded-full ${
-                i === active ? "w-6 bg-gold" : "w-2 bg-gold/40 hover:bg-gold/70"
+                i === active % Math.min(safeImages.length, 8)
+                  ? "w-6 bg-gold"
+                  : "w-2 bg-gold/40"
               }`}
             />
           ))}
@@ -237,11 +246,9 @@ function ProductCard({
             </span>
           ))}
         </div>
-        <a href="#contact" className="gold-link mt-auto self-start">
-          Enquire Now →
-        </a>
+        <span className="gold-link mt-auto self-start">Explore Collection →</span>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -258,12 +265,14 @@ function Products() {
           description="Bulk custom-printed tees for offices, events, brands & more. Premium fabrics, precise prints, any quantity."
           tags={["Bulk Orders", "Office Wear", "Custom Print"]}
           images={tshirtImages}
+          to="/products/tshirts"
         />
         <ProductCard
           title="Custom Oliive Line Wallets"
           description="Handcrafted wallets with custom branding. Perfect for corporate gifts, retail, or personal collections."
           tags={["Corporate Gifting", "Custom Branding", "Premium Leather"]}
           images={walletImages}
+          to="/products/wallets"
         />
       </div>
     </section>
