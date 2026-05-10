@@ -50,7 +50,7 @@ function Navbar({ onOpen }: { onOpen: () => void }) {
             alt="OLIIVELINE Logo"
             className="h-10 md:h-12 w-auto drop-shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-transform group-hover:scale-105"
           />
-          <span className="font-display text-gold text-lg md:text-xl tracking-[0.3em] hidden sm:inline">
+          <span className="font-display text-gold text-sm md:text-xl tracking-[0.2em] md:tracking-[0.3em]">
             OLIIVELINE
           </span>
         </Link>
@@ -138,7 +138,7 @@ function Hero() {
     >
       <div className="text-center max-w-3xl">
         <div className="section-label mb-8">Premium Custom Manufacturing</div>
-        <h1 className="shimmer-text font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-[0.3em] mb-6">
+        <h1 className="shimmer-text font-display text-4xl xs:text-5xl md:text-7xl lg:text-8xl font-semibold tracking-[0.15em] md:tracking-[0.3em] mb-6 w-full px-2">
           OLIIVELINE
         </h1>
         <p className="font-body italic text-cream/90 text-xl md:text-2xl mb-8">
