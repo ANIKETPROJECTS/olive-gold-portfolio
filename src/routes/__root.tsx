@@ -75,11 +75,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "OLIIVELINE — Crafted to Command Attention" },
       { name: "description", content: "Premium custom-printed T-shirts and handcrafted wallets." },
       { name: "author", content: "OLIIVELINE" },
-      { property: "og:title", content: "OLIIVELINE" },
-      { property: "og:description", content: "Crafted to Command Attention." },
+      { property: "og:title", content: "OLIIVELINE — Crafted to Command Attention" },
+      { property: "og:description", content: "Premium custom-printed T-shirts and handcrafted wallets." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "OLIIVELINE — Crafted to Command Attention" },
+      { name: "twitter:description", content: "Premium custom-printed T-shirts and handcrafted wallets." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/puKAlGiNjxP6lRvcIsQ30GbwmGB3/social-images/social-1778429629192-Logo.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/puKAlGiNjxP6lRvcIsQ30GbwmGB3/social-images/social-1778429629192-Logo.webp" },
     ],
     links: [
       {
