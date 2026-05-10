@@ -70,10 +70,8 @@
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #0A0A0A; }
-::-webkit-scrollbar-thumb { background: var(--gold-soft); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+* { scrollbar-width: none; -ms-overflow-style: none; }
+::-webkit-scrollbar { display: none; }
 
 /* Shimmer */
 @keyframes shimmer-sweep {
