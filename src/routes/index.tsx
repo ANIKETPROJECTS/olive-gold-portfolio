@@ -263,6 +263,7 @@ function Products() {
           title="Custom Oliive Line Wallets"
           description="Handcrafted wallets with custom branding. Perfect for corporate gifts, retail, or personal collections."
           tags={["Corporate Gifting", "Custom Branding", "Premium Leather"]}
+          images={walletImages}
         />
       </div>
     </section>
