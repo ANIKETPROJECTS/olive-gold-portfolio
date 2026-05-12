@@ -12,7 +12,6 @@ const sortedGallery = [
 function ImageTile({
   entry,
   index,
-  label,
   onClick,
 }: {
   entry: ImageEntry;
