@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsWalletsRouteImport } from './routes/products.wallets'
 import { Route as ProductsTshirtsRouteImport } from './routes/products.tshirts'
+import { Route as ProductsCapsRouteImport } from './routes/products.caps'
+import { Route as ProductsBagsRouteImport } from './routes/products.bags'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,33 +30,67 @@ const ProductsTshirtsRoute = ProductsTshirtsRouteImport.update({
   path: '/products/tshirts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsCapsRoute = ProductsCapsRouteImport.update({
+  id: '/products/caps',
+  path: '/products/caps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsBagsRoute = ProductsBagsRouteImport.update({
+  id: '/products/bags',
+  path: '/products/bags',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/products/bags': typeof ProductsBagsRoute
+  '/products/caps': typeof ProductsCapsRoute
   '/products/tshirts': typeof ProductsTshirtsRoute
   '/products/wallets': typeof ProductsWalletsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/products/bags': typeof ProductsBagsRoute
+  '/products/caps': typeof ProductsCapsRoute
   '/products/tshirts': typeof ProductsTshirtsRoute
   '/products/wallets': typeof ProductsWalletsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/products/bags': typeof ProductsBagsRoute
+  '/products/caps': typeof ProductsCapsRoute
   '/products/tshirts': typeof ProductsTshirtsRoute
   '/products/wallets': typeof ProductsWalletsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/products/tshirts' | '/products/wallets'
+  fullPaths:
+    | '/'
+    | '/products/bags'
+    | '/products/caps'
+    | '/products/tshirts'
+    | '/products/wallets'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/products/tshirts' | '/products/wallets'
-  id: '__root__' | '/' | '/products/tshirts' | '/products/wallets'
+  to:
+    | '/'
+    | '/products/bags'
+    | '/products/caps'
+    | '/products/tshirts'
+    | '/products/wallets'
+  id:
+    | '__root__'
+    | '/'
+    | '/products/bags'
+    | '/products/caps'
+    | '/products/tshirts'
+    | '/products/wallets'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProductsBagsRoute: typeof ProductsBagsRoute
+  ProductsCapsRoute: typeof ProductsCapsRoute
   ProductsTshirtsRoute: typeof ProductsTshirtsRoute
   ProductsWalletsRoute: typeof ProductsWalletsRoute
 }
@@ -82,11 +118,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsTshirtsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products/caps': {
+      id: '/products/caps'
+      path: '/products/caps'
+      fullPath: '/products/caps'
+      preLoaderRoute: typeof ProductsCapsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products/bags': {
+      id: '/products/bags'
+      path: '/products/bags'
+      fullPath: '/products/bags'
+      preLoaderRoute: typeof ProductsBagsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProductsBagsRoute: ProductsBagsRoute,
+  ProductsCapsRoute: ProductsCapsRoute,
   ProductsTshirtsRoute: ProductsTshirtsRoute,
   ProductsWalletsRoute: ProductsWalletsRoute,
 }

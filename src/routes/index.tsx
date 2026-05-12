@@ -5,6 +5,8 @@ import { categories } from "@/lib/products";
 
 const tshirtImages = categories.tshirts.images;
 const walletImages = categories.wallets.images;
+const bagImages = categories.bags.images;
+const capImages = categories.caps.images;
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -173,7 +175,7 @@ function ProductCard({
   description: string;
   tags: string[];
   images: string[];
-  to: "/products/tshirts" | "/products/wallets";
+  to: "/products/tshirts" | "/products/wallets" | "/products/bags" | "/products/caps";
 }) {
   const [active, setActive] = useState(0);
   useEffect(() => {
@@ -265,6 +267,20 @@ function Products() {
           tags={["Corporate Gifting", "Custom Branding", "Premium Leather"]}
           images={walletImages}
           to="/products/wallets"
+        />
+        <ProductCard
+          title="Custom Oliive Line Bags"
+          description="Custom-printed tote bags for events, corporates & retail. Durable, stylish, and branded to perfection."
+          tags={["Tote Bags", "Custom Print", "Bulk Orders"]}
+          images={bagImages}
+          to="/products/bags"
+        />
+        <ProductCard
+          title="Custom Oliive Line Caps"
+          description="Custom embroidered and printed caps for teams, events, and brand merchandise. Premium finish, any quantity."
+          tags={["Embroidery", "Custom Branding", "Bulk Orders"]}
+          images={capImages}
+          to="/products/caps"
         />
       </div>
     </section>

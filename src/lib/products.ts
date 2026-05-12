@@ -6,6 +6,14 @@ const walletMods = import.meta.glob("../assets/products/wallets/*.jpeg", {
   eager: true,
   import: "default",
 });
+const bagMods = import.meta.glob("../assets/products/bags/*.jpeg", {
+  eager: true,
+  import: "default",
+});
+const capMods = import.meta.glob("../assets/products/caps/*.jpeg", {
+  eager: true,
+  import: "default",
+});
 
 export type ImageEntry = {
   src: string;
@@ -69,11 +77,13 @@ function groupTshirts(entries: ImageEntry[]): GalleryItem[] {
 
 export const tshirtEntries: ImageEntry[] = toEntries(tshirtMods);
 export const walletImages = Object.values(walletMods) as string[];
+export const bagImages = Object.values(bagMods) as string[];
+export const capImages = Object.values(capMods) as string[];
 export const tshirtGallery: GalleryItem[] = groupTshirts(tshirtEntries);
 export const tshirtImages = tshirtEntries.map((e) => e.src);
 
 export type ProductCategory = {
-  slug: "tshirts" | "wallets";
+  slug: "tshirts" | "wallets" | "bags" | "caps";
   title: string;
   tagline: string;
   description: string;
@@ -81,7 +91,7 @@ export type ProductCategory = {
   images: string[];
 };
 
-export const categories: Record<"tshirts" | "wallets", ProductCategory> = {
+export const categories: Record<"tshirts" | "wallets" | "bags" | "caps", ProductCategory> = {
   tshirts: {
     slug: "tshirts",
     title: "Custom Oliive Line T-Shirts",
@@ -99,5 +109,23 @@ export const categories: Record<"tshirts" | "wallets", ProductCategory> = {
       "Handcrafted wallets with custom branding. Perfect for corporate gifts, retail, or personal collections.",
     tags: ["Corporate Gifting", "Custom Branding", "Premium Leather"],
     images: walletImages,
+  },
+  bags: {
+    slug: "bags",
+    title: "Custom Oliive Line Bags",
+    tagline: "Carry your brand wherever you go.",
+    description:
+      "Custom-printed tote bags and carry bags for events, corporates & retail. Durable, stylish, and branded to perfection.",
+    tags: ["Tote Bags", "Custom Print", "Bulk Orders"],
+    images: bagImages,
+  },
+  caps: {
+    slug: "caps",
+    title: "Custom Oliive Line Caps",
+    tagline: "Top it off with your brand.",
+    description:
+      "Custom embroidered and printed caps for teams, events, and brand merchandise. Premium finish, any quantity.",
+    tags: ["Embroidery", "Custom Branding", "Bulk Orders"],
+    images: capImages,
   },
 };
