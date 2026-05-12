@@ -134,7 +134,7 @@ function Hero() {
           OLIIVELINE
         </h1>
         <p className="font-body italic text-cream/90 text-xl md:text-2xl mb-8">
-          Crafted to Command Attention.
+          Crafted To Serve.
         </p>
         <div className="mx-auto w-40 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
       </div>
