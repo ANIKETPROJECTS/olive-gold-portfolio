@@ -4,6 +4,11 @@ import { categories, tshirtGallery, type GalleryItem, type ImageEntry } from "@/
 
 const category = categories.tshirts;
 
+const sortedGallery = [
+  ...tshirtGallery.filter((i) => i.type === "pair"),
+  ...tshirtGallery.filter((i) => i.type === "single"),
+];
+
 function ImageTile({
   entry,
   index,
@@ -57,7 +62,7 @@ export function TshirtsPage() {
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   const allImages: string[] = [];
-  for (const item of tshirtGallery) {
+  for (const item of sortedGallery) {
     if (item.type === "pair") {
       allImages.push(item.a.src, item.b.src);
     } else {
@@ -80,7 +85,7 @@ export function TshirtsPage() {
   let globalIndex = 0;
   const gridItems: React.ReactNode[] = [];
 
-  for (const item of tshirtGallery) {
+  for (const item of sortedGallery) {
     if (item.type === "pair") {
       const idxA = globalIndex;
       const idxB = globalIndex + 1;
