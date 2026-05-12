@@ -1,25 +1,112 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { categories, type ProductCategory } from "@/lib/products";
+import { categories, tshirtGallery, type GalleryItem, type ImageEntry } from "@/lib/products";
 
-export function CategoryPage({ category }: { category: ProductCategory }) {
+const category = categories.tshirts;
+
+function ImageTile({
+  entry,
+  index,
+  label,
+  onClick,
+}: {
+  entry: ImageEntry;
+  index: number;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="group relative w-full aspect-square overflow-hidden border border-gold/30 hover:border-gold transition-all bg-olive-deep"
+    >
+      <img
+        src={entry.src}
+        alt={`${category.title} ${entry.filename}`}
+        loading="lazy"
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+      <span className="absolute bottom-2 left-3 text-[10px] tracking-[0.25em] font-display text-gold opacity-0 group-hover:opacity-100 transition-opacity">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+    </button>
+  );
+}
+
+function PairRow({
+  item,
+  index,
+  onClickA,
+  onClickB,
+}: {
+  item: Extract<GalleryItem, { type: "pair" }>;
+  index: number;
+  onClickA: () => void;
+  onClickB: () => void;
+}) {
+  return (
+    <div className="col-span-2 grid grid-cols-2 gap-3 md:gap-5">
+      <ImageTile entry={item.a} index={index} onClick={onClickA} />
+      <ImageTile entry={item.b} index={index + 1} onClick={onClickB} />
+    </div>
+  );
+}
+
+export function TshirtsPage() {
   const [lightbox, setLightbox] = useState<number | null>(null);
+
+  const allImages: string[] = [];
+  for (const item of tshirtGallery) {
+    if (item.type === "pair") {
+      allImages.push(item.a.src, item.b.src);
+    } else {
+      allImages.push(item.entry.src);
+    }
+  }
 
   useEffect(() => {
     document.body.style.overflow = lightbox !== null ? "hidden" : "";
     const onKey = (e: KeyboardEvent) => {
       if (lightbox === null) return;
       if (e.key === "Escape") setLightbox(null);
-      if (e.key === "ArrowRight")
-        setLightbox((i) => (i === null ? null : (i + 1) % category.images.length));
-      if (e.key === "ArrowLeft")
-        setLightbox((i) =>
-          i === null ? null : (i - 1 + category.images.length) % category.images.length
-        );
+      if (e.key === "ArrowRight") setLightbox((i) => (i === null ? null : (i + 1) % allImages.length));
+      if (e.key === "ArrowLeft") setLightbox((i) => (i === null ? null : (i - 1 + allImages.length) % allImages.length));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [lightbox, category.images.length]);
+  }, [lightbox, allImages.length]);
+
+  let globalIndex = 0;
+  const gridItems: React.ReactNode[] = [];
+
+  for (const item of tshirtGallery) {
+    if (item.type === "pair") {
+      const idxA = globalIndex;
+      const idxB = globalIndex + 1;
+      globalIndex += 2;
+      gridItems.push(
+        <PairRow
+          key={item.baseKey}
+          item={item}
+          index={idxA}
+          onClickA={() => setLightbox(idxA)}
+          onClickB={() => setLightbox(idxB)}
+        />
+      );
+    } else {
+      const idx = globalIndex;
+      globalIndex += 1;
+      gridItems.push(
+        <ImageTile
+          key={item.entry.filename}
+          entry={item.entry}
+          index={idx}
+          onClick={() => setLightbox(idx)}
+        />
+      );
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -56,29 +143,13 @@ export function CategoryPage({ category }: { category: ProductCategory }) {
             </span>
           ))}
         </div>
-        <div className="mx-auto mt-10 w-32 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
+
+        <div className="mx-auto mt-8 w-32 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
       </section>
 
       <section className="px-4 md:px-12 pb-24 max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
-          {category.images.map((src, i) => (
-            <button
-              key={src}
-              onClick={() => setLightbox(i)}
-              className="group relative aspect-square overflow-hidden border border-gold/30 hover:border-gold transition-all bg-olive-deep"
-            >
-              <img
-                src={src}
-                alt={`${category.title} ${i + 1}`}
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <span className="absolute bottom-2 left-3 text-[10px] tracking-[0.25em] font-display text-gold opacity-0 group-hover:opacity-100 transition-opacity">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-            </button>
-          ))}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+          {gridItems}
         </div>
 
         <div className="text-center mt-20">
@@ -105,15 +176,13 @@ export function CategoryPage({ category }: { category: ProductCategory }) {
             className="absolute left-4 md:left-10 text-gold text-4xl px-4 py-2 hover:scale-110 transition-transform"
             onClick={(e) => {
               e.stopPropagation();
-              setLightbox((i) =>
-                i === null ? null : (i - 1 + category.images.length) % category.images.length
-              );
+              setLightbox((i) => (i === null ? null : (i - 1 + allImages.length) % allImages.length));
             }}
           >
             ‹
           </button>
           <img
-            src={category.images[lightbox]}
+            src={allImages[lightbox]}
             alt=""
             className="max-h-[85vh] max-w-[90vw] object-contain border border-gold/40"
             onClick={(e) => e.stopPropagation()}
@@ -123,13 +192,13 @@ export function CategoryPage({ category }: { category: ProductCategory }) {
             className="absolute right-4 md:right-10 text-gold text-4xl px-4 py-2 hover:scale-110 transition-transform"
             onClick={(e) => {
               e.stopPropagation();
-              setLightbox((i) => (i === null ? null : (i + 1) % category.images.length));
+              setLightbox((i) => (i === null ? null : (i + 1) % allImages.length));
             }}
           >
             ›
           </button>
           <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-gold/80 font-display tracking-[0.3em] text-xs">
-            {lightbox + 1} / {category.images.length}
+            {lightbox + 1} / {allImages.length}
           </span>
         </div>
       )}
@@ -138,5 +207,5 @@ export function CategoryPage({ category }: { category: ProductCategory }) {
 }
 
 export const Route = createFileRoute("/products/tshirts")({
-  component: () => <CategoryPage category={categories.tshirts} />,
+  component: TshirtsPage,
 });

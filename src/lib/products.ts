@@ -7,8 +7,70 @@ const walletMods = import.meta.glob("../assets/products/wallets/*.jpeg", {
   import: "default",
 });
 
-export const tshirtImages = Object.values(tshirtMods) as string[];
+export type ImageEntry = {
+  src: string;
+  filename: string;
+};
+
+export type ImagePair = {
+  type: "pair";
+  a: ImageEntry;
+  b: ImageEntry;
+  baseKey: string;
+};
+
+export type ImageSingle = {
+  type: "single";
+  entry: ImageEntry;
+};
+
+export type GalleryItem = ImagePair | ImageSingle;
+
+function toEntries(mods: Record<string, unknown>): ImageEntry[] {
+  return Object.entries(mods).map(([path, src]) => ({
+    src: src as string,
+    filename: path.split("/").pop()!.replace(/\.\w+$/, ""),
+  }));
+}
+
+function groupTshirts(entries: ImageEntry[]): GalleryItem[] {
+  const sorted = [...entries].sort((a, b) => {
+    const numA = parseInt(a.filename.replace(/\D/g, ""), 10);
+    const numB = parseInt(b.filename.replace(/\D/g, ""), 10);
+    return numA !== numB ? numA - numB : a.filename.localeCompare(b.filename);
+  });
+
+  const byBase = new Map<string, ImageEntry[]>();
+  for (const entry of sorted) {
+    const match = entry.filename.match(/^(.*?)([AB])$/i);
+    if (match) {
+      const base = match[1];
+      if (!byBase.has(base)) byBase.set(base, []);
+      byBase.get(base)!.push(entry);
+    } else {
+      byBase.set(entry.filename, [entry]);
+    }
+  }
+
+  const items: GalleryItem[] = [];
+  for (const [base, group] of byBase) {
+    const aImg = group.find((e) => e.filename.toUpperCase().endsWith("A"));
+    const bImg = group.find((e) => e.filename.toUpperCase().endsWith("B"));
+    if (aImg && bImg) {
+      items.push({ type: "pair", a: aImg, b: bImg, baseKey: base });
+    } else {
+      for (const entry of group) {
+        items.push({ type: "single", entry });
+      }
+    }
+  }
+  return items;
+}
+
+export const tshirtEntries: ImageEntry[] = toEntries(tshirtMods);
 export const walletImages = Object.values(walletMods) as string[];
+export const tshirtGallery: GalleryItem[] = groupTshirts(tshirtEntries);
+export const tshirtImages = tshirtEntries.map((e) => e.src);
 
 export type ProductCategory = {
   slug: "tshirts" | "wallets";
