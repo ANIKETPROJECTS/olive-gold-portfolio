@@ -138,15 +138,5 @@ export function CategoryPage({ category }: { category: ProductCategory }) {
 }
 
 export const Route = createFileRoute("/products/tshirts")({
-  head: () => ({
-    meta: [
-      { title: "Custom T-Shirts — OLIIVELINE" },
-      {
-        name: "description",
-        content:
-          "Bulk custom-printed T-shirts. Premium fabrics, precise prints, any quantity — crafted by OLIIVELINE.",
-      },
-    ],
-  }),
   component: () => <CategoryPage category={categories.tshirts} />,
 });

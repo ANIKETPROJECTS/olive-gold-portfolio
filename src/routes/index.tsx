@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import logo from "@/assets/logo.png"; /* Replace logo.png with actual logo file */
+import logo from "@/assets/logo.png";
 import { categories } from "@/lib/products";
 
 const tshirtImages = categories.tshirts.images;
@@ -8,14 +8,6 @@ const walletImages = categories.wallets.images;
 
 export const Route = createFileRoute("/")({
   component: Index,
-  head: () => ({
-    meta: [
-      { title: "OLIIVELINE — Crafted to Command Attention" },
-      { name: "description", content: "Premium custom-printed T-shirts and handcrafted wallets. Bulk & retail ready, built for brands that speak before a word is said." },
-      { property: "og:title", content: "OLIIVELINE — Premium Custom Manufacturing" },
-      { property: "og:description", content: "Custom T-shirts and handcrafted wallets, crafted to command attention." },
-    ],
-  }),
 });
 
 function useReveal() {
